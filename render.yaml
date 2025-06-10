@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: jackett-api
+    env: docker
+    dockerfilePath: Dockerfile.jackett
+    plan: free
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: PUID
+        value: "1000"
+      - key: PGID
+        value: "1000"
+      - key: AUTO_UPDATE
+        value: "true"
+      - key: RUN_OPTS
+        value: ""
+      - key: TZ
+        value: "Asia/Kolkata"
+
+  - type: web
+    name: mitsu-tg-bot
+    env: docker
+    dockerfilePath: Dockerfile.bot
+    plan: free
+    autoDeploy: true
+    # envVars:
+    #   - key: TELEGRAM_BOT_TOKEN
+    #     value: ""  # or leave it blank and set in dashboard
