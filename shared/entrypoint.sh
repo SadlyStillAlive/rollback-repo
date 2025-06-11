@@ -12,13 +12,19 @@ fi
 # Configuration file path
 CONFIG_FILE="/config/Jackett/ServerConfig.json"
 
-# Wait for Jackett config file to be generated
-echo "Waiting for Jackett config file: $CONFIG_FILE..."
-while [ ! -f "$CONFIG_FILE" ]; do
-  echo "Config file not found. Retrying in 5 seconds..."
+MAX_RETRIES=5
+RETRY_COUNT=0
+
+while [ ! -f "$CONFIG_FILE" ] && [ "$RETRY_COUNT" -lt "$MAX_RETRIES" ]; do
+  echo "Config file not found. Retrying in 10 seconds... ($((RETRY_COUNT + 1))/$MAX_RETRIES)"
   sleep 10
+  RETRY_COUNT=$((RETRY_COUNT + 1))
 done
-echo "Config file found: $CONFIG_FILE."
+
+if [ ! -f "$CONFIG_FILE" ]; then
+  echo "ERROR: Timed out waiting for $CONFIG_FILE. Exiting."
+  exit 1
+fi
 
 # Run the intermediate script
 if [ -f "/shared/process_config.sh" ]; then
