@@ -1,30 +1,32 @@
-# Dockerfile.bot
+# Dockerfile.bot — for the Telegram bot
 
-# Use Python as a base image
-FROM python:3.11-slim
+FROM python:3.9-slim
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    ca-certificates \
+    jq \
+    && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies (optional, adjust as needed)
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+# Copy bot code and config scripts
+COPY bot/bot.py /app/bot/bot.py
+COPY shared/entrypoint.sh /app/shared/entrypoint.sh
+COPY shared/process_config.sh /app/shared/process_config.sh
+COPY requirements.txt /app/bot/requirements.txt
+COPY Jackett/ /app/Jackett/
 
-# Copy bot source code
-COPY ./bot /app/bot
-COPY ./shared /app/shared
-COPY ./Jackett /app/Jackett
-
-
-# Copy any config or startup script
-COPY ./shared/process_config.sh /app/shared/process_config.sh
-RUN chmod +x /app/shared/process_config.sh
-
-# Install Python dependencies (if any)
-COPY ./bot/requirements.txt /app/bot/requirements.txt
+# Install Python dependencies
 RUN pip install --no-cache-dir -r /app/bot/requirements.txt
 
-# Expose port for the bot’s API
+# Make scripts executable
+RUN chmod +x /app/shared/entrypoint.sh /app/shared/process_config.sh
+
+# Expose port for your bot's web interface (if used)
 EXPOSE 5000
 
-# Default command (overridden in render.yaml)
-CMD ["/app/shared/process_config.sh"]
+# Start the bot
+ENTRYPOINT ["sh", "/app/shared/entrypoint.sh"]
