@@ -26,6 +26,7 @@ services:
     autoDeploy: true
     envVars:
       - key: TELEGRAM_BOT_TOKEN
+        value:''
         sync: false  # Will use the Render dashboard value
       - key: JACKETT_API_URL
         sync: false  # Will use the Render dashboard value
