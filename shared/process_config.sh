@@ -32,6 +32,7 @@ echo "Environment variables saved to /app/shared/envs/.env"
 echo "Starting Telegram bot via webhook mode..."
 python /app/bot/bot.py
 echo "Succesfully deployed the bot
+echo "Starting Telegram bot...\nDo check your bot."
 
 # Optional: keep container alive for debugging
 tail -f /dev/null
