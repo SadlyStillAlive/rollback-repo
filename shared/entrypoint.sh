@@ -55,6 +55,7 @@ if [ -f "/app/shared/process_config.sh" ]; then
   chmod +x /app/shared/process_config.sh
   echo "Running process_config.sh..."
   exec /app/shared/process_config.sh
+  cat /app/Jackett/ServerConfig.json
 else
   echo "Error: process_config.sh not found. Exiting."
   exit 1
